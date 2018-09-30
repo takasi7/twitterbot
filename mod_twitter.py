@@ -16,6 +16,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 
+ID='user@twitter.com'
+PASSWORD='twitter password'
 
 class TwitterDriver:
 	def __init__(self, BROWSER='chrome',DRIVER='',HEADLESS=True,IGNORE_CERT_ERROR=False):
@@ -159,7 +161,7 @@ class TwitterDriver:
 
 if __name__ == '__main__':
 	tw = TwitterDriver(BROWSER='firefox',HEADLESS=True,IGNORE_CERT_ERROR=False)
-	res=tw.login('ztecr@ymail.com','iostreamxyz42')
+	res=tw.login(ID,PASSWORD)
 	if res < 0:
 		print(res)
 		exit()
