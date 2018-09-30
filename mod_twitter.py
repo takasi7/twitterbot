@@ -18,6 +18,8 @@ from selenium.webdriver.common.by import By
 
 ID='user@twitter.com'
 PASSWORD='twitter password'
+TWEET='test tweet'
+IMAGE=''
 
 class TwitterDriver:
 	def __init__(self, BROWSER='chrome',DRIVER='',HEADLESS=True,IGNORE_CERT_ERROR=False):
@@ -42,7 +44,10 @@ class TwitterDriver:
 		if BROWSER == 'firefox':
 			self.driver = webdriver.Firefox(firefox_binary='/usr/local/bin/firefox',firefox_options=options,log_path='/dev/null',firefox_profile=fp)
 		elif BROWSER == 'chrome':
-			self.driver = webdriver.Chrome(DRIVER,chrome_options=options)
+			if len(DRIVER):
+				self.driver = webdriver.Chrome(DRIVER,chrome_options=options)
+			else:
+				self.driver = webdriver.Chrome(chrome_options=options)
 	
 	def get_firefox_profile(self):
 		fp = None
@@ -152,6 +157,12 @@ class TwitterDriver:
 			return -10
 		
 		element.click()
+
+		try:
+			wait.until(expected_conditions.invisibility_of_element_located((By.XPATH,pos)))
+		except:
+			return 1
+		
 		return 0
 		
 	def __del__(self):
@@ -159,22 +170,49 @@ class TwitterDriver:
 
 
 
+def fmtext(text):
+	text = text.replace('\\n','\n')
+	return text
+
 if __name__ == '__main__':
-	tw = TwitterDriver(BROWSER='firefox',HEADLESS=True,IGNORE_CERT_ERROR=False)
+
+	if len(sys.argv)==3:
+		ID = sys.argv[1]
+		PASSWORD = sys.argv[2]
+	elif len(sys.argv)==4:
+		ID = sys.argv[1]
+		PASSWORD = sys.argv[2]
+		TWEET=fmtext(sys.argv[3])
+	elif len(sys.argv)==5:
+		ID = sys.argv[1]
+		PASSWORD = sys.argv[2]
+		TWEET = fmtext(sys.argv[3])
+		IMAGE = sys.argv[4]
+	
+	#tw = TwitterDriver(BROWSER='firefox',HEADLESS=True,IGNORE_CERT_ERROR=False)
+	tw = TwitterDriver(HEADLESS=True)
 	res=tw.login(ID,PASSWORD)
 	if res < 0:
 		print(res)
 		exit()
 	
-	res=tw.set_text('テスト\nツイート'+'443')
+	#res=tw.set_text('テスト\nツイート'+'444321')
+	res=tw.set_text(TWEET)
 	if res < 0:
 		print(res)
 		exit()
 	
-	#res=tw.set_image('D:\\project\\what_you_want\\pic.jpg')
+	if len(IMAGE) and os.path.exists(IMAGE):
+		res=tw.set_image(IMAGE)
+		if res < 0:
+			print(res)
+			exit()
+	
 	res=tw.tweet()
+	print('tweet ',end='')
 	print(res)
-	os.system('read "hitenter:"')
+
+	del tw
 
 
 
