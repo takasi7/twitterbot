@@ -74,15 +74,15 @@ class TwitterDriver:
 	def login(self,id,password):
 		self.id = id
 		self.password = password
-		self.driver.get('https://twitter.com/?lang=ja')
-		#self.driver.get('http://www.zetecr.net/')
+		#self.driver.get('https://twitter.com/?lang=ja')
+		self.driver.get('https://twitter.com/login')
 		self.driver.implicitly_wait(5);
 		
-		element = self.get_element_tag('a', 'href', 'https://twitter.com/login')
-		if element == None:
-			return -1
-		else:
-			element.click()
+		#element = self.get_element_tag('a', 'href', 'https://twitter.com/login')
+		#if element == None:
+		#	return -1
+		#else:
+		#	element.click()
 		
 		element = self.get_element_tag('input','name','session[username_or_email]')
 		if element == None:
