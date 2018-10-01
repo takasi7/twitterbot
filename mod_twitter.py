@@ -20,6 +20,7 @@ ID='user@twitter.com'
 PASSWORD='twitter password'
 TWEET='test tweet'
 IMAGE=''
+FIREFOX_BINARY='/usr/local/bin/firefox'
 
 class TwitterDriver:
 	def __init__(self, BROWSER='chrome',DRIVER='',HEADLESS=True,IGNORE_CERT_ERROR=False):
@@ -42,7 +43,7 @@ class TwitterDriver:
 			options.add_argument('--ignore-certificate-errors')
 		
 		if BROWSER == 'firefox':
-			self.driver = webdriver.Firefox(firefox_binary='/usr/local/bin/firefox',firefox_options=options,log_path='/dev/null',firefox_profile=fp)
+			self.driver = webdriver.Firefox(firefox_binary=FIREFOX_BINARY,firefox_options=options,log_path='/dev/null',firefox_profile=fp)
 		elif BROWSER == 'chrome':
 			if len(DRIVER):
 				self.driver = webdriver.Chrome(DRIVER,chrome_options=options)
@@ -176,21 +177,18 @@ def fmtext(text):
 
 if __name__ == '__main__':
 
-	if len(sys.argv)==3:
+	if len(sys.argv) >= 3:
 		ID = sys.argv[1]
 		PASSWORD = sys.argv[2]
-	elif len(sys.argv)==4:
-		ID = sys.argv[1]
-		PASSWORD = sys.argv[2]
+	
+	if len(sys.argv) >= 4:
 		TWEET=fmtext(sys.argv[3])
-	elif len(sys.argv)==5:
-		ID = sys.argv[1]
-		PASSWORD = sys.argv[2]
-		TWEET = fmtext(sys.argv[3])
+	
+	if len(sys.argv) >= 5:
 		IMAGE = sys.argv[4]
 	
 	#tw = TwitterDriver(BROWSER='firefox',HEADLESS=True,IGNORE_CERT_ERROR=False)
-	tw = TwitterDriver(HEADLESS=True)
+	tw = TwitterDriver(HEADLESS=False)
 	res=tw.login(ID,PASSWORD)
 	if res < 0:
 		print(res)
@@ -211,7 +209,7 @@ if __name__ == '__main__':
 	res=tw.tweet()
 	print('tweet ',end='')
 	print(res)
-
+	
 	del tw
 
 
