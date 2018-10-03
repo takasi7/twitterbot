@@ -22,8 +22,16 @@ TWEET='test tweet'
 IMAGE=''
 FIREFOX_BINARY='/usr/local/bin/firefox'
 
+
 class TwitterDriver:
+	def __init__(self, driver):
+		self.driver = driver
+		self.id = None
+		self.password = None
+	
+	"""
 	def __init__(self, BROWSER='chrome',DRIVER='',HEADLESS=True,IGNORE_CERT_ERROR=False):
+		self.setting = {}
 		self.driver = None
 		self.id = None
 		self.password = None
@@ -49,18 +57,7 @@ class TwitterDriver:
 				self.driver = webdriver.Chrome(DRIVER,chrome_options=options)
 			else:
 				self.driver = webdriver.Chrome(chrome_options=options)
-	
-	def get_firefox_profile(self):
-		fp = None
-		path = os.path.expanduser('~/.mozilla/firefox')
-		if os.path.isdir(path) == False:
-			return None
-		for f in os.listdir(path):
-			if re.search('\.default$',f):
-				path = path + '/' + f
-				fp = webdriver.FirefoxProfile(path)
-				break
-		return fp
+		"""
 	
 	def get_element_tag(self,tag_name,attribute_name,attribute):
 		element = None
@@ -174,6 +171,20 @@ class TwitterDriver:
 def fmtext(text):
 	text = text.replace('\\n','\n')
 	return text
+	
+
+def get_firefox_profile():
+	fp = None
+	path = os.path.expanduser('~/.mozilla/firefox')
+	if os.path.isdir(path) == False:
+		return None
+	for f in os.listdir(path):
+		if re.search('\.default$',f):
+			path = path + '/' + f
+			fp = webdriver.FirefoxProfile(path)
+			break
+	return fp
+
 
 if __name__ == '__main__':
 	
@@ -187,14 +198,22 @@ if __name__ == '__main__':
 	if len(sys.argv) >= 5:
 		IMAGE = sys.argv[4]
 	
-	#tw = TwitterDriver(BROWSER='firefox',HEADLESS=True,IGNORE_CERT_ERROR=False)
-	tw = TwitterDriver(HEADLESS=False)
+	#options = chromeOptions()
+	#options.add_argument('--ignore-certificate-errors')
+	#driver = webdriver.Chrome(chrome_options=options)
+	
+	options = firefoxOptions()
+	#fp = get_firefox_profile()
+	options.set_headless(headless=True)
+	#driver = webdriver.Firefox(firefox_binary=FIREFOX_BINARY,firefox_options=options,log_path='/dev/null',firefox_profile=fp)
+	driver = webdriver.Firefox(firefox_options=options)
+	
+	tw = TwitterDriver(driver)
 	res=tw.login(ID,PASSWORD)
 	if res < 0:
 		print(res)
 		exit()
 	
-	#res=tw.set_text('テスト\nツイート'+'444321')
 	res=tw.set_text(TWEET)
 	if res < 0:
 		print(res)
