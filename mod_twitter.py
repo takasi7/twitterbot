@@ -29,36 +29,6 @@ class TwitterDriver:
 		self.id = None
 		self.password = None
 	
-	"""
-	def __init__(self, BROWSER='chrome',DRIVER='',HEADLESS=True,IGNORE_CERT_ERROR=False):
-		self.setting = {}
-		self.driver = None
-		self.id = None
-		self.password = None
-		self.loginflag = False
-		fp = None
-		options = None
-		if BROWSER=='firefox':
-			options = firefoxOptions()
-			fp = self.get_firefox_profile()
-		elif BROWSER=='chrome':
-			options = chromeOptions()
-		
-		if HEADLESS == True:
-			options.set_headless(headless=True)
-		
-		if IGNORE_CERT_ERROR == True:
-			options.add_argument('--ignore-certificate-errors')
-		
-		if BROWSER == 'firefox':
-			self.driver = webdriver.Firefox(firefox_binary=FIREFOX_BINARY,firefox_options=options,log_path='/dev/null',firefox_profile=fp)
-		elif BROWSER == 'chrome':
-			if len(DRIVER):
-				self.driver = webdriver.Chrome(DRIVER,chrome_options=options)
-			else:
-				self.driver = webdriver.Chrome(chrome_options=options)
-		"""
-	
 	def get_element_tag(self,tag_name,attribute_name,attribute):
 		element = None
 		tags = self.driver.find_elements_by_tag_name(tag_name)
@@ -75,13 +45,9 @@ class TwitterDriver:
 		self.driver.get('https://twitter.com/login')
 		self.driver.implicitly_wait(5);
 		
-		#element = self.get_element_tag('a', 'href', 'https://twitter.com/login')
-		#if element == None:
-		#	return -1
-		#else:
-		#	element.click()
-		
+		#element = self.get_element_tag('a', 'href', 'https://twitter.com/login')		
 		element = self.get_element_tag('input','name','session[username_or_email]')
+		
 		if element == None:
 			return -2
 		else:
@@ -121,21 +87,38 @@ class TwitterDriver:
 		
 		
 	def set_text(self, text):
+		wait = WebDriverWait(self.driver, 10)
 		element = None
-		element = self.driver.find_element_by_id('tweet-box-home-timeline')
-		if element == None:
+		id = 'tweet-box-home-timeline'
+		try:
+			wait.until(expected_conditions.presence_of_element_located((By.ID,id)))
+		except:
 			return -6
-			
-		element.click()
+		
+		try:
+			element = self.driver.find_element_by_id(id)
+		except:
+			return -16
+		
+		#element.click()
 		element.send_keys(text)
 		return 0
 	
 	def set_image(self, path):
+		wait = WebDriverWait(self.driver, 10)
 		element = None
 		pos = '//*[@id="timeline"]/div[2]/div/form/div[3]/div[1]/span[1]/div/div/label/input'
-		element = self.driver.find_element_by_xpath(pos)
-		if element == None:
+		
+		try:
+			wait.until(expected_conditions.presence_of_element_located((By.XPATH,pos)))
+		except:
 			return -7
+		
+		try:
+			element = self.driver.find_element_by_xpath(pos)
+		except:
+			return -17
+		
 		element.send_keys(path)
 		return 0
 		
