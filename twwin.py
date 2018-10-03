@@ -1,8 +1,6 @@
 #! /usr/local/bin/python3
 import sys
 import os
-import time
-import os.path
 import re
 from selenium import webdriver
 
@@ -27,6 +25,8 @@ if len(sys.argv) >= 5:
 		
 options = mod_twitter.firefoxOptions()
 options.set_headless(headless=True)
+#fp = mod_twitter.get_firefox_profile()
+#driver = webdriver.Firefox(firefox_binary=FIREFOX_BINARY,firefox_options=options,log_path='/dev/null',firefox_profile=fp)
 driver = webdriver.Firefox(firefox_options=options)
 
 #options = mod_twitter.chromeOptions()

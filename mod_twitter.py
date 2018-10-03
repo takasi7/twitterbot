@@ -1,11 +1,9 @@
 #! /usr/local/bin/python3
-import sys
+
 import os
-from selenium import webdriver
-import time
-import os.path
 import re
 
+from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options as firefoxOptions
 from selenium.webdriver.chrome.options import Options as chromeOptions
@@ -15,13 +13,6 @@ from selenium.webdriver.common.proxy import *
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
-
-ID='user@twitter.com'
-PASSWORD='twitter password'
-TWEET='test tweet'
-IMAGE=''
-FIREFOX_BINARY='/usr/local/bin/firefox'
-
 
 class TwitterDriver:
 	def __init__(self, driver):
@@ -170,54 +161,15 @@ def get_firefox_profile():
 
 
 if __name__ == '__main__':
-	
-	if len(sys.argv) >= 3:
-		ID = sys.argv[1]
-		PASSWORD = sys.argv[2]
-	
-	if len(sys.argv) >= 4:
-		TWEET=fmtext(sys.argv[3])
-	
-	if len(sys.argv) >= 5:
-		IMAGE = sys.argv[4]
-	
-	#options = chromeOptions()
-	#options.add_argument('--ignore-certificate-errors')
-	#driver = webdriver.Chrome(chrome_options=options)
-	
-	options = firefoxOptions()
-	#fp = get_firefox_profile()
-	options.set_headless(headless=True)
-	#driver = webdriver.Firefox(firefox_binary=FIREFOX_BINARY,firefox_options=options,log_path='/dev/null',firefox_profile=fp)
-	driver = webdriver.Firefox(firefox_options=options)
-	
-	tw = TwitterDriver(driver)
-	res=tw.login(ID,PASSWORD)
-	if res < 0:
-		print(res)
-		exit()
-	
-	res=tw.set_text(TWEET)
-	if res < 0:
-		print(res)
-		exit()
-	
-	if len(IMAGE) and os.path.exists(IMAGE):
-		res=tw.set_image(IMAGE)
-		if res < 0:
-			print(res)
-			exit()
-	
-	res=tw.tweet()
-	print('tweet ',end='')
-	print(res)
-	
+	s='''
+	dirver=webdriver.Firefox()
+	tw=TwitterDriver(driver)
+	r = tw.login('id','password')
+	r = tw.set_text('some string')
+	r = tw.set_image('image path')
+	r = tw.tweet()
 	del tw
-
-
-
-
-
-
+	'''
+	print(s)
 
 
