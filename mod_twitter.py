@@ -145,7 +145,14 @@ class TwitterDriver:
 		for e in elements:
 			idc = e.get_attribute('id')
 			if re.match(r'stream-item-tweet-\d+',idc):
-				self.timelines[idc] = {'id':idc}
+				item = {'id':idc}
+				css = '#'+idc+' .js-tweet-text-container'
+				try:
+					element = self.driver.find_element_by_css_selector(css)
+					item['text'] = element.text
+				except:
+					pass
+				self.timelines[idc] = item
 	
 
 	def __del__(self):
