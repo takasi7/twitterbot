@@ -19,6 +19,7 @@ class TwitterDriver:
 		self.driver = driver
 		self.id = None
 		self.password = None
+		self.timelines = {}
 	
 	def get_element_tag(self,tag_name,attribute_name,attribute):
 		element = None
@@ -122,10 +123,12 @@ class TwitterDriver:
 		except:
 			return -8
 		
-		element = self.driver.find_element_by_xpath(pos)
-		if element == None:
+		try:
+			element = self.driver.find_element_by_xpath(pos)
+		except:
 			return -9
-		elif element.is_enabled() == False:
+		
+		if element.is_enabled() == False:
 			return -10
 		
 		element.click()
@@ -137,6 +140,14 @@ class TwitterDriver:
 		
 		return 0
 		
+	def get_timeline(self):
+		elements = self.driver.find_elements_by_tag_name('li')
+		for e in elements:
+			idc = e.get_attribute('id')
+			if re.match(r'stream-item-tweet-\d+',idc):
+				self.timelines[idc] = {'id':idc}
+	
+
 	def __del__(self):
 		self.driver.quit()
 

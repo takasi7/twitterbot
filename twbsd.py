@@ -41,6 +41,13 @@ if res < 0:
 	print(res)
 	exit()
 
+tw.get_timeline()
+for key in tw.timelines.keys():
+	item = tw.timelines[key]
+	print(item['id'])
+
+exit()
+
 res=tw.set_text(TWEET)
 if res < 0:
 	print(res)
