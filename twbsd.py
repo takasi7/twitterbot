@@ -42,10 +42,16 @@ if res < 0:
 	exit()
 
 tw.get_timeline()
+
+fh = open('res.txt','wb')
 for key in tw.timelines.keys():
 	item = tw.timelines[key]
-	print(item['id'])
-
+	for k in item.keys():
+		v = item[k]
+		string = k + '=' + v + '\n'
+		fh.write(string.encode('utf-8'))
+	fh.write('\n'.encode('utf-8'))
+fh.close()
 exit()
 
 res=tw.set_text(TWEET)

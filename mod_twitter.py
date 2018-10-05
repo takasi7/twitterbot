@@ -146,10 +146,16 @@ class TwitterDriver:
 			idc = e.get_attribute('id')
 			if re.match(r'stream-item-tweet-\d+',idc):
 				item = {'id':idc}
-				css = '#'+idc+' .js-tweet-text-container'
 				try:
+					css = '#'+idc+' .js-tweet-text-container'
 					element = self.driver.find_element_by_css_selector(css)
 					item['text'] = element.text
+					
+					css = '#'+idc+' a.account-group'
+					element = self.driver.find_element_by_css_selector(css)
+					user = element.get_attribute('href')
+					user = user.replace('https://twitter.com/','')
+					item['user'] = user
 				except:
 					pass
 				self.timelines[idc] = item
